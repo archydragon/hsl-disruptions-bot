@@ -8,5 +8,5 @@ config :slack,
   channel_id: {:system, "SLACK_CHANNEL_ID"}
 
 config :logger, :console,
-  level: :debug,
+  level: :info,
   format: "$date $time $metadata[$level] $levelpad$message\n"
