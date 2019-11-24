@@ -2,6 +2,7 @@
 
 Small Slack bot to post about disruptions and route cancellations in HSL transport network.
 
+
 ## Configuration
 
 All configuration is being done by setting environment variables.
@@ -12,7 +13,8 @@ All configuration is being done by setting environment variables.
  `SLACK_CHANNEL_ID`  | Slack channel ID to post updates to.                                    | Required.
  `MESSAGES_LANGUAGE` | Preferred language for disruptions messages. Can be `en`, `fi` or `sv`. | `en`
 
-## Running
+
+## Running locally
 
 Requires Elixir 1.9 or higher installed.
 
@@ -20,6 +22,16 @@ Requires Elixir 1.9 or higher installed.
 mix deps.get
 mix run --no-halt
 ```
+
+
+## Running with Docker Compose
+
+Set environment variables in host machine shell or in `.env` file.
+
+```bash
+docker-compose up --build
+```
+
 
 ## License
 
