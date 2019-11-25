@@ -99,7 +99,7 @@ defmodule HslDisruptionsBot.Slack do
       }"
 
     text =
-      "#{icon} #{String.capitalize(cdata.mode)} trip by the route" <>
+      "#{icon} #{String.capitalize(cdata.mode)} trip " <>
         "*#{cdata.short_name}* (#{cdata.long_name}) at " <>
         "#{time} has been #{String.downcase(cdata.state)}."
 
