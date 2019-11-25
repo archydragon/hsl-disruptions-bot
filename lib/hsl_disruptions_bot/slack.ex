@@ -92,11 +92,7 @@ defmodule HslDisruptionsBot.Slack do
     time_minutes = div(cdata.departure_time, 60)
 
     # Format time to HH:MM format with leading zeroes.
-    # Yep, it looks a bit creepy in Erlang/Elixir.
-    time =
-      "#{:io_lib.format("~2..0B", [div(time_minutes, 60)])}:#{
-        :io_lib.format("~2..0B", [rem(time_minutes, 60)])
-      }"
+    time = :io_lib.format("~2..0B:~2..0B", [div(time_minutes, 60), rem(time_minutes, 60)])
 
     text =
       "#{icon} #{String.capitalize(cdata.mode)} trip " <>
