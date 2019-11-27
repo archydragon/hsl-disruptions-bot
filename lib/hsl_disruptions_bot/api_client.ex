@@ -70,12 +70,28 @@ defmodule HslDisruptionsBot.APIClient do
   def handle_info(:get_cancellations, state) do
     Logger.debug("Querying for ongoing cancellations.")
 
+    # Get current date and time to filter trips which were already done but keep flickering.
+    {:ok, datetime} = DateTime.now("Europe/Helsinki")
+
+    date =
+      datetime
+      |> DateTime.to_date()
+      |> Date.to_iso8601()
+
+    time = datetime.hour * 3600 + datetime.minute * 60
+    Logger.debug("Using date #{date} and time #{time}.")
+
     query = """
     {
-      cancelledTripTimes(feeds: ["HSL"]) {
+      cancelledTripTimes(
+        feeds: ["HSL"]
+        minDate: "#{date}"
+        minArrivalTime: #{time}
+      ) {
         scheduledDeparture
         serviceDay
         trip {
+          gtfsId
           routeShortName
           route {
             gtfsId
@@ -211,6 +227,7 @@ defmodule HslDisruptionsBot.APIClient do
         end)
 
       struct(Model.Cancellation, %{
+        id: r["trip"]["gtfsId"],
         mode: route["mode"],
         long_name: route["longName"],
         short_name: route["shortName"],

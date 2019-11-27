@@ -20,6 +20,8 @@ defmodule HslDisruptionsBot.MixProject do
 
   defp deps do
     [
+      # TZ database
+      {:tzdata, "~> 1.0.1"},
       # env based configuration
       {:confex, "~> 3.4.0"},
       # GraphQL client

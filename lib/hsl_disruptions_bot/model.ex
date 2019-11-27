@@ -11,7 +11,8 @@ defmodule HslDisruptionsBot.Model do
 
   # Model for cancelled trip information.
   defmodule Cancellation do
-    defstruct mode: nil,
+    defstruct id: nil,
+              mode: nil,
               long_name: nil,
               short_name: nil,
               route_id: nil,

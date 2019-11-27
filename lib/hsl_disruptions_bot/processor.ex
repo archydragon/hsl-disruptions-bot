@@ -103,8 +103,7 @@ defmodule HslDisruptionsBot.Processor do
   defp find_new_cancellations(known_cancellations, cancellations_data) do
     new_known_cancellations =
       Map.new(cancellations_data, fn c ->
-        cid = "#{c.route_id}-#{c.day}-#{c.departure_time}"
-        {cid, c}
+        {c.id, c}
       end)
 
     # Find all cancellations keys which weren't present in the old state.
