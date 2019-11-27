@@ -25,7 +25,9 @@ defmodule HslDisruptionsBot.Processor do
     Logger.info("Starting processing worker.")
 
     state = %{
+      fresh_disruptions: true,
       known_disruptions: [],
+      fresh_cancellations: true,
       known_cancellations: []
     }
 
@@ -40,7 +42,7 @@ defmodule HslDisruptionsBot.Processor do
 
     # Don't push forward if current state is empty. It means that applications has just
     # started and doesn't have any data. We are interested only in new disruptions information.
-    push_forward = known_disruptions != []
+    push_forward = !state[:fresh_disruptions]
 
     {new_disruptions, new_known_disruptions} =
       find_new_disruptions(known_disruptions, disruptions)
@@ -51,7 +53,8 @@ defmodule HslDisruptionsBot.Processor do
       Slack.send_message(:disruption, new_disruptions)
     end
 
-    {:noreply, %{state | :known_disruptions => new_known_disruptions}}
+    {:noreply,
+     %{state | :known_disruptions => new_known_disruptions, :fresh_disruptions => false}}
   end
 
   def handle_cast(
@@ -62,7 +65,7 @@ defmodule HslDisruptionsBot.Processor do
 
     # Don't push forward if current state is empty. It means that applications has just
     # started and doesn't have any data. We are interested only in new cancellations information.
-    push_forward = known_cancellations != []
+    push_forward = !state[:fresh_cancellations]
 
     {new_cancellations, new_known_cancellations} =
       find_new_cancellations(known_cancellations, cancellations)
@@ -73,7 +76,8 @@ defmodule HslDisruptionsBot.Processor do
       Slack.send_message(:cancellation, new_cancellations)
     end
 
-    {:noreply, %{state | :known_cancellations => new_known_cancellations}}
+    {:noreply,
+     %{state | :known_cancellations => new_known_cancellations, :fresh_cancellations => false}}
   end
 
   defp find_new_disruptions(known_disruptions, disruptions_data) do
