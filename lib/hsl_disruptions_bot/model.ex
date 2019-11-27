@@ -15,7 +15,6 @@ defmodule HslDisruptionsBot.Model do
               mode: nil,
               long_name: nil,
               short_name: nil,
-              route_id: nil,
               state: nil,
               day: nil,
               departure_time: nil

@@ -96,6 +96,8 @@ defmodule HslDisruptionsBot.APIClient do
           route {
             gtfsId
             longName
+            shortName
+            mode
           }
         }
         realtimeState
@@ -193,45 +195,12 @@ defmodule HslDisruptionsBot.APIClient do
          %{"data" => %{"cancelledTripTimes" => raw_cancellations}},
          _lang
        ) do
-    # Get IDs and information for all trips to optimize querying.
-    ids =
-      Enum.map(raw_cancellations, fn r ->
-        r["trip"]["route"]["gtfsId"]
-      end)
-
-    ids_string = Enum.join(ids, "\", \"")
-
-    query = """
-    {
-      routes(ids: ["#{ids_string}"]) {
-        gtfsId
-        shortName
-        longName
-        mode
-      }
-    }
-    """
-
-    routes_response =
-      api_query(query, fn response_body ->
-        response_body
-      end)
-
-    # Add routes information to cancellation data.
     Enum.map(raw_cancellations, fn r ->
-      route_id = r["trip"]["route"]["gtfsId"]
-
-      route =
-        Enum.find(routes_response["data"]["routes"], fn d ->
-          d["gtfsId"] == route_id
-        end)
-
       struct(Model.Cancellation, %{
         id: r["trip"]["gtfsId"],
-        mode: route["mode"],
-        long_name: route["longName"],
-        short_name: route["shortName"],
-        route_id: route_id,
+        mode: r["route"]["mode"],
+        long_name: r["route"]["longName"],
+        short_name: r["route"]["shortName"],
         state: r["realtimeState"],
         day: r["serviceDay"],
         departure_time: r["scheduledDeparture"]
