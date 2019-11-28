@@ -92,7 +92,9 @@ defmodule HslDisruptionsBot.APIClient do
         serviceDay
         trip {
           gtfsId
-          routeShortName
+          pattern {
+            name
+          }
           route {
             gtfsId
             longName
@@ -198,9 +200,10 @@ defmodule HslDisruptionsBot.APIClient do
     Enum.map(raw_cancellations, fn r ->
       struct(Model.Cancellation, %{
         id: r["trip"]["gtfsId"],
-        mode: r["route"]["mode"],
-        long_name: r["route"]["longName"],
-        short_name: r["route"]["shortName"],
+        mode: r["trip"]["route"]["mode"],
+        long_name: r["trip"]["route"]["longName"],
+        short_name: r["trip"]["route"]["shortName"],
+        pattern_name: r["trip"]["pattern"]["name"],
         state: r["realtimeState"],
         day: r["serviceDay"],
         departure_time: r["scheduledDeparture"]

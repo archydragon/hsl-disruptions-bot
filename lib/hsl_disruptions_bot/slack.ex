@@ -88,6 +88,11 @@ defmodule HslDisruptionsBot.Slack do
         _ -> ":question:"
       end
 
+    # Format route from trip definition
+    # 1. Remove stop IDs. 2. Make route name *bold*.
+    clear_route = Regex.replace(~r/( \(.*\))/, cdata.pattern_name, "")
+    route = Regex.replace(~r/^([^\s]+) (.+)/, clear_route, "\*\\1\* \\2")
+
     # Departure time is provided by HSL API in seconds since midnight, convert it to minutes.
     time_minutes = div(cdata.departure_time, 60)
 
@@ -96,7 +101,7 @@ defmodule HslDisruptionsBot.Slack do
 
     text =
       "#{icon} #{String.capitalize(cdata.mode)} trip " <>
-        "*#{cdata.short_name}* (#{cdata.long_name}) at " <>
+        "#{route} (#{cdata.long_name}) at " <>
         "#{time} has been #{String.downcase(cdata.state)}."
 
     # Return JSON encoded string.

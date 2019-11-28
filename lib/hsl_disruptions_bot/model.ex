@@ -13,6 +13,7 @@ defmodule HslDisruptionsBot.Model do
   defmodule Cancellation do
     defstruct id: nil,
               mode: nil,
+              pattern_name: nil,
               long_name: nil,
               short_name: nil,
               state: nil,
