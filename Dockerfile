@@ -6,13 +6,13 @@ RUN mix local.hex --force \
     && mix local.rebar --force \
     && /root/.mix/rebar3 update
 
-ADD mix.exs /app/mix.exs
-ADD mix.lock /app/mix.lock
+COPY mix.exs /app/mix.exs
+COPY mix.lock /app/mix.lock
 RUN mix deps.get \
     && mix deps.compile
 
-ADD config /app/config
-ADD lib /app/lib
+COPY config /app/config
+COPY lib /app/lib
 RUN mix compile
 
 CMD ["mix", "run", "--no-halt"]
